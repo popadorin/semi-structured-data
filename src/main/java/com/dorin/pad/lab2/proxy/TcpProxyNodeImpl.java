@@ -14,7 +14,9 @@ public class TcpProxyNodeImpl implements TcpProxyNode {
     private ObjectInputStream objectInputStream;
 
     public TcpProxyNodeImpl(String proxyName, int proxyPort) throws IOException {
+        LOGGER.info("address: " + proxyName + ", port: " + proxyPort);
         socket = new Socket(proxyName, proxyPort);
+        LOGGER.info("tot zaebisi");
         objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
         objectInputStream = new ObjectInputStream(socket.getInputStream());
         LOGGER.info("Client TCP started...");

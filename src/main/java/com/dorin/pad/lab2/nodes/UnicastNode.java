@@ -1,7 +1,7 @@
 package com.dorin.pad.lab2.nodes;
 
-import com.dorin.pad.lab2.models.Employee;
 import com.dorin.pad.lab2.models.MetaInformation;
+import com.dorin.pad.lab2.models.ProxyCommand;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 
@@ -35,6 +35,13 @@ public class UnicastNode {
 
         clientSocket.send(sendPacket);
         LOGGER.info("message successfully sent!");
+    }
+
+    public ProxyCommand readFromProxy() throws IOException {
+        DatagramPacket packet = new DatagramPacket(new byte[1024], 1024);
+        clientSocket.receive(packet);
+
+        return ProxyCommand.valueOf(new String(packet.getData(), packet.getOffset(), packet.getLength()));
     }
 
     public void setAddress(InetAddress address) {

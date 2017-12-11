@@ -21,6 +21,8 @@ public class Node1 {
             LOGGER.error("Already used port");
         } catch (IOException e) {
             LOGGER.error("IOException occurred on listen");
+        } catch (ClassNotFoundException e) {
+            LOGGER.error("ClassNotFoundException on: " + e.getMessage());
         }
 
     }

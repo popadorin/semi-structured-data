@@ -18,6 +18,8 @@ public class Proxy {
     // configurations
     private final static int clientPort = 7777;
 
+    private final static int nodeTcpPort = 9999;
+
     private final static int timeoutForNodeDiscovery = 5000; // 5 seconds
     private final static int multicastPort = 12345;
     private final static String multicastAddress = "230.1.1.1";
@@ -52,6 +54,7 @@ public class Proxy {
             LOGGER.error("UnknownHostException on: " + e.getMessage());
         } catch (SocketException se) {
             LOGGER.error("SocketException on: " + se.getMessage());
+            se.printStackTrace();
         } catch (IOException ioe) {
             LOGGER.error("IOException on: " + ioe.getMessage());
         } catch (ClassNotFoundException cnfe) {
@@ -59,20 +62,20 @@ public class Proxy {
         }
     }
 
-    private static Employee getEmployee() throws IOException {
+    private static Employee getEmployee() throws IOException, ClassNotFoundException {
         // multicast and unicast logic
         DatagramSocket udpSocket = new DatagramSocket();
         MulticastProxy multicastProxy = new MulticastProxy(udpSocket, multicastAddress, multicastPort);
         UnicastProxy unicastProxy = new UnicastProxy(udpSocket);
 
-        runDISProtocol(multicastProxy, unicastProxy, timeoutForNodeDiscovery);
+        Employee employee = runDISProtocol(multicastProxy, unicastProxy, timeoutForNodeDiscovery);
         // return employee
-        return null;
+        return employee;
     }
 
-    private static void runDISProtocol(MulticastProxy multicastProxy,
+    private static Employee runDISProtocol(MulticastProxy multicastProxy,
                                          UnicastProxy unicastProxy,
-                                         int timeoutForNodeDiscovery) throws IOException {
+                                         int timeoutForNodeDiscovery) throws IOException, ClassNotFoundException {
 
         byte[] message = ProxyCommand.GIVE_META_INFO.name().getBytes();
         multicastProxy.sendToNodes(message);
@@ -82,13 +85,23 @@ public class Proxy {
 
         // find the node with most valuable metaInfo (most numberofconnections);
         NodeInfo maven = getMostValuableNode(nodeInfos);
-
+        LOGGER.info("Maven: " + maven);
         // make TCP connection with that node
+        UnicastProxy unicastProxy1 = new UnicastProxy(new DatagramSocket());
+        unicastProxy1.sendToNode(ProxyCommand.YOU_ARE_MAVEN, maven.getAddress(), maven.getPort());
+//        unicastProxy.sendToNode(ProxyCommand.YOU_ARE_MAVEN, maven.getAddress(), maven.getPort());
 
-        TcpProxyNode proxyNode = new TcpProxyNodeImpl(maven.getAddress().getHostName(), maven.getPort());
+        TcpProxyNode proxyNode = new TcpProxyNodeImpl("localhost", nodeTcpPort);
+
         // say to that node to GIVE_DATA
+        proxyNode.sendToNode(ProxyCommand.GIVE_DATA.name().getBytes());
+
+        // get from from node tcp
+        byte[] fromNode = proxyNode.readFromNode();
+        Employee employee = gson.fromJson(new String(fromNode), Employee.class);
 
         // send that data to client
+        return employee;
     }
 
     private static NodeInfo getMostValuableNode(List<NodeInfo> nodeInfos) {

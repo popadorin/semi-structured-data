@@ -31,7 +31,6 @@ public class MulticastNodeImpl implements MulticastNode {
     @Override
     public ProxyCommand readFromProxy() throws IOException {
         packet = new DatagramPacket(new byte[1024], 1024);
-        LOGGER.info("Waiting for a  multicast message...");
 
         mcSocket.receive(packet);
 

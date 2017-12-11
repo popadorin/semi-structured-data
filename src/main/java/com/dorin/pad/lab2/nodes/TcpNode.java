@@ -1,5 +1,9 @@
 package com.dorin.pad.lab2.nodes;
 
-public interface TcpNode {
+import java.io.IOException;
 
+public interface TcpNode {
+    byte[] readFromProxy() throws IOException, ClassNotFoundException;
+    void sendToProxy(byte[] object) throws IOException;
+    void close();
 }

@@ -30,6 +30,7 @@ public class Client {
                         transport.sendToProxy(toSend);
 
                         // wait to result and print it after it comes
+                        LOGGER.info("wait for response from proxy...");
                         byte[] toReceive = transport.readFromProxy();
                         String fromProxy = new String(toReceive);
                         LOGGER.info("From proxy: " + fromProxy);

@@ -23,30 +23,6 @@ public class TcpProxyClientImpl implements TcpProxyClient {
 
     }
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
-//        server = new ServerSocket(port);
-//        socket = server.accept(); // locking, waiting for socket to connect
-//
-//        objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-//        objectInputStream = new ObjectInputStream(socket.getInputStream());
-//        LOGGER.info("Proxy TCP started...");
-
-//        boolean isStopped = false;
-//        while (!isStopped) {
-//            byte[] toReceive = (byte[]) objectInputStream.readObject();
-//            String fromProxy = new String(toReceive);
-//            LOGGER.info("From client: " + fromProxy);
-//
-//            System.out.println("Type message to client:");
-//            String userInput = new Scanner(System.in).nextLine();
-//            byte[] toSend = userInput.getBytes();
-//
-//            objectOutputStream.writeObject(toSend);
-//
-//        }
-
-    }
-
     @Override
     public byte[] readFromClient() throws IOException, ClassNotFoundException {
         return (byte[]) objectInputStream.readObject();
