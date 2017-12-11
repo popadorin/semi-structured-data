@@ -12,11 +12,11 @@ public class Node1 {
 
     public static void main(String[] args) {
         try {
-            MulticastNode multicastNode = new MulticastNode(8881,
+            Node node = new Node(8881,
                     new MetaInformation(3),
                     new Employee("dragos", "lupei", 80000));
 
-            multicastNode.listen();
+            node.run();
         } catch (SocketException e) {
             LOGGER.error("Already used port");
         } catch (IOException e) {
