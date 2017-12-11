@@ -72,11 +72,4 @@ public class MultiCastReceiver {
         LOGGER.info("message successfully sent!");
     }
 
-    private void printPacketData(DatagramPacket packet) {
-        LOGGER.info("Packet:");
-        LOGGER.info("Address: " + packet.getAddress());
-        LOGGER.info("Port: " + packet.getPort());
-        LOGGER.info("Socket address: " + packet.getSocketAddress());
-        LOGGER.info("Data: " + packet.getData());
-    }
 }

@@ -64,15 +64,15 @@ public class Proxy {
             // ca degeaba mai sta conditia la while daca el nu trece de aici
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
             udpSocket.receive(receivePacket);
-            String receivedMessage = new String(receivePacket.getData());
+            String receivedMessage = new String(receivePacket.getData(),
+                    receivePacket.getOffset(), receivePacket.getLength());
 
 
             // Aici problema ca datele care vin nu-s sigure si nu pot converti in json daca sunt greseli,
             // trebuie validare si inca trebuie de facut sa se transmita datele sigur chiar si prin UDP
+            Employee employee = gson.fromJson(receivedMessage, Employee.class);
+            LOGGER.info("Data from node: " + employee);
 
-
-//                    Employee employee = gson.fromJson(receivedMessage, Employee.class);
-//                    LOGGER.info("Data from node: " + employee);
             LOGGER.info("Data from node(port: "
                     + receivePacket.getPort() + ", address: " + receivePacket.getAddress() + ") :\n "
                     + receivedMessage);
