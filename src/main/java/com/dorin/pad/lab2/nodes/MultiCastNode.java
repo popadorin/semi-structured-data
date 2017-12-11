@@ -1,22 +1,18 @@
-package com.dorin.pad.lab2;
+package com.dorin.pad.lab2.nodes;
 
 import com.dorin.pad.lab2.models.Employee;
-import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.net.*;
 
-public class MultiCastReceiver {
+public class MultiCastNode {
     private final Logger LOGGER = Logger.getLogger(this.getClass().getName());
-    private final Gson gson = new Gson();
-    private DatagramSocket clientSocket;
-    private InetAddress unicastAddress;
-    private int unicastPort;
     private Employee employee;
+    private UnicastNode unicastNode;
 
-    public MultiCastReceiver(int port, Employee employee) throws SocketException {
-        clientSocket = new DatagramSocket(port);
+    public MultiCastNode(int port, Employee employee) throws SocketException {
+        unicastNode = new UnicastNode(port);
         this.employee = employee;
     }
 
@@ -37,15 +33,15 @@ public class MultiCastReceiver {
 
             mcSocket.receive(packet);
 
-            unicastAddress = packet.getAddress();
-            unicastPort = packet.getPort();
+            unicastNode.setAddress(packet.getAddress());
+            unicastNode.setPort(packet.getPort());
 
             String message = new String(packet.getData(), packet.getOffset(), packet.getLength());
 
             LOGGER.info("Received message: " + message);
 
             if (message.trim().toLowerCase().equals("give")) {
-                sendToProxy(employee);
+                unicastNode.sendToProxy(employee);
             }
 
             if (message.trim().toLowerCase().equals("exit")) {
@@ -57,19 +53,6 @@ public class MultiCastReceiver {
         }
     }
 
-    private void sendToProxy(Employee employee) throws IOException {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            LOGGER.error("THREAD sleep error");
-        }
 
-        String serializedEmployee = gson.toJson(employee);
-        byte[] sendData = serializedEmployee.getBytes();
-        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, unicastAddress, unicastPort);
-
-        clientSocket.send(sendPacket);
-        LOGGER.info("message successfully sent!");
-    }
 
 }

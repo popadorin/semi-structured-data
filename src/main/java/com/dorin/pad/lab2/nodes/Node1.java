@@ -1,6 +1,5 @@
 package com.dorin.pad.lab2.nodes;
 
-import com.dorin.pad.lab2.MultiCastReceiver;
 import com.dorin.pad.lab2.models.Employee;
 import org.apache.log4j.Logger;
 
@@ -12,12 +11,12 @@ public class Node1 {
 
     public static void main(String[] args) {
         try {
-            MultiCastReceiver multiCastReceiver = new MultiCastReceiver(8881,
+            MultiCastNode multiCastNode = new MultiCastNode(8881,
                     new Employee("dragos", "lupei", 80000));
 
-            multiCastReceiver.listen();
+            multiCastNode.listen();
         } catch (SocketException e) {
-            LOGGER.error("IO Exception on multicast receiver");
+            LOGGER.error("Already used port");
         } catch (IOException e) {
             LOGGER.error("IOException occurred on listen");
         }
