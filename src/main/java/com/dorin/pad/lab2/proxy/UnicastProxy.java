@@ -37,10 +37,8 @@ public class UnicastProxy {
         List<NodeInfo> nodeInfos = new ArrayList<>();
         udpSocket.setSoTimeout(timeout);
 
-        long startTime = System.currentTimeMillis();
-        long endTime = startTime + timeout;
-
-        while (System.currentTimeMillis() < endTime) {
+        boolean timeoutOccurred = false;
+        while (!timeoutOccurred) {
             try {
                 DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                 udpSocket.receive(receivePacket);
@@ -53,7 +51,7 @@ public class UnicastProxy {
 
                 nodeInfos.add(new NodeInfo(receivePacket.getAddress(), receivePacket.getPort(), metaInformation));
             } catch (SocketTimeoutException e) {
-                LOGGER.error("udp socket timeout");
+                timeoutOccurred = true;
             }
         }
 
