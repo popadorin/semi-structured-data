@@ -1,19 +1,22 @@
 package com.dorin.pad.lab2.nodes;
 
 import com.dorin.pad.lab2.models.Employee;
+import com.dorin.pad.lab2.models.MetaInformation;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.net.*;
 
-public class MultiCastNode {
+public class MulticastNode {
     private final Logger LOGGER = Logger.getLogger(this.getClass().getName());
     private Employee employee;
     private UnicastNode unicastNode;
+    private MetaInformation metaInformation;
 
-    public MultiCastNode(int port, Employee employee) throws SocketException {
+    public MulticastNode(int port, MetaInformation metaInformation, Employee employee) throws SocketException {
         unicastNode = new UnicastNode(port);
         this.employee = employee;
+        this.metaInformation = metaInformation;
     }
 
     public void listen() throws IOException {
@@ -41,7 +44,7 @@ public class MultiCastNode {
             LOGGER.info("Received message: " + message);
 
             if (message.trim().toLowerCase().equals("give")) {
-                unicastNode.sendToProxy(employee);
+                unicastNode.sendToProxy(metaInformation);
             }
 
             if (message.trim().toLowerCase().equals("exit")) {

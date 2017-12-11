@@ -1,6 +1,7 @@
 package com.dorin.pad.lab2.nodes;
 
 import com.dorin.pad.lab2.models.Employee;
+import com.dorin.pad.lab2.models.MetaInformation;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 
@@ -21,14 +22,14 @@ public class UnicastNode {
         clientSocket = new DatagramSocket(port);
     }
 
-    public void sendToProxy(Employee employee) throws IOException {
+    public void sendToProxy(MetaInformation metaInformation) throws IOException {
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             LOGGER.error("THREAD sleep error");
         }
 
-        String serializedEmployee = gson.toJson(employee);
+        String serializedEmployee = gson.toJson(metaInformation);
         byte[] sendData = serializedEmployee.getBytes();
         DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, address, port);
 

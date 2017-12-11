@@ -1,6 +1,7 @@
 package com.dorin.pad.lab2.nodes;
 
 import com.dorin.pad.lab2.models.Employee;
+import com.dorin.pad.lab2.models.MetaInformation;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -11,10 +12,11 @@ public class Node3 {
 
     public static void main(String[] args) {
         try {
-            MultiCastNode multiCastNode = new MultiCastNode(8883,
+            MulticastNode multicastNode = new MulticastNode(8883,
+                    new MetaInformation(2),
                     new Employee("vasile", "schidu", 70000));
 
-            multiCastNode.listen();
+            multicastNode.listen();
         } catch (SocketException e) {
             LOGGER.error("Already used port");
         } catch (IOException e) {

@@ -1,12 +1,14 @@
 package com.dorin.pad.lab2.proxy;
 
-import com.dorin.pad.lab2.models.Employee;
+import com.dorin.pad.lab2.models.MetaInformation;
 import com.google.gson.Gson;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UnicastProxy {
     private final Logger LOGGER = Logger.getLogger(this.getClass().getName());
@@ -15,6 +17,7 @@ public class UnicastProxy {
     private final Gson gson = new Gson();
     private byte[] receiveData = new byte[1024];
     private DatagramSocket udpSocket;
+    private Map<DatagramPacket, Integer> metaInformations = new HashMap<>();
 
     public UnicastProxy(DatagramSocket udpSocket) {
         this.udpSocket = udpSocket;
@@ -35,11 +38,13 @@ public class UnicastProxy {
 
             // Aici problema ca datele care vin nu-s sigure si nu pot converti in json daca sunt greseli,
             // trebuie validare si inca trebuie de facut sa se transmita datele sigur chiar si prin UDP
-            Employee employee = gson.fromJson(receivedMessage, Employee.class);
+            MetaInformation metaInformation = gson.fromJson(receivedMessage, MetaInformation.class);
 
             LOGGER.info("Data from node(port: "
                     + receivePacket.getPort() + ", address: " + receivePacket.getAddress() + ") :\n "
-                    + employee);
+                    + metaInformation);
+
+            metaInformations.put(receivePacket, metaInformation.getNumberOfConnections());
 
         }
 
