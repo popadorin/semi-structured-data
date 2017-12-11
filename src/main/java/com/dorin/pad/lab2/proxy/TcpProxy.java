@@ -28,7 +28,7 @@ public class TcpProxy {
         while (!isStopped) {
             byte[] toReceive = (byte[]) objectInputStream.readObject();
             String fromProxy = new String(toReceive);
-            LOGGER.info("From proxy: " + fromProxy);
+            LOGGER.info("From client: " + fromProxy);
 
             System.out.println("Type message to client:");
             String userInput = new Scanner(System.in).nextLine();

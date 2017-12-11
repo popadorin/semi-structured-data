@@ -1,10 +1,13 @@
 package com.dorin.pad.lab2.proxy;
 
+import com.dorin.pad.lab2.models.NodeInfo;
 import com.dorin.pad.lab2.models.ProxyCommand;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Proxy {
@@ -15,9 +18,9 @@ public class Proxy {
             DatagramSocket udpSocket = new DatagramSocket();
 
             // configurations
+            final int timeoutForNodeDiscovery = 5000; // 5 seconds
             final int mcPort = 12345;
             final String mcAddress = "230.1.1.1";
-            final ProxyCommand COMMAND = ProxyCommand.GIVE_META_INFO;
 
             MulticastProxy multicastProxy = new MulticastProxy(udpSocket, mcAddress, mcPort);
             UnicastProxy unicastProxy = new UnicastProxy(udpSocket);
@@ -30,10 +33,7 @@ public class Proxy {
                 String userInput = new Scanner(System.in).nextLine();
                 switch (userInput.trim().toLowerCase()) {
                     case "send":
-                        byte[] message = COMMAND.name().getBytes();
-                        multicastProxy.sendToNodes(message);
-
-                        unicastProxy.listen();
+                        runProxyProtocol(multicastProxy, unicastProxy, timeoutForNodeDiscovery);
                         break;
                     case "exit":
                         isStopped = true;
@@ -53,4 +53,24 @@ public class Proxy {
             LOGGER.error("IOException on: " + ioe.getMessage());
         }
     }
+
+    private static void runProxyProtocol(MulticastProxy multicastProxy,
+                                         UnicastProxy unicastProxy,
+                                         int timeoutForNodeDiscovery) throws IOException {
+
+        byte[] message = ProxyCommand.GIVE_META_INFO.name().getBytes();
+        multicastProxy.sendToNodes(message);
+
+        List<NodeInfo> nodeInfos = unicastProxy.readFromNodes(timeoutForNodeDiscovery);
+        nodeInfos.forEach(System.out::println);
+
+        // find the node with most valuable metaInfo (most numberofconnections);
+
+        // make TCP connection with that node
+
+        // say to that node to GIVE_DATA
+
+        // send that data to client
+    }
+
 }

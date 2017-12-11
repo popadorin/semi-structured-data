@@ -12,7 +12,7 @@ public class Node {
     private final Logger LOGGER = Logger.getLogger(this.getClass().getName());
     private Employee employee;
     private UnicastNode unicastNode;
-    private MulticastNodeImpl multicastNode;
+    private MulticastNode multicastNode;
     private MetaInformation metaInformation;
 
     public Node(int unicastPort, MetaInformation metaInformation, Employee employee) throws IOException {
@@ -30,10 +30,9 @@ public class Node {
     public void run() throws IOException {
         boolean isStopped = false;
         while (!isStopped) {
-            unicastNode.setAddress(multicastNode.getProxyAddress());
-            unicastNode.setPort(multicastNode.getProxyPort());
-
             ProxyCommand commandFromProxy  = multicastNode.readFromProxy();
+            setUnicastData(multicastNode.getProxyAddress(), multicastNode.getProxyPort());
+
             switch (commandFromProxy) {
                 case GIVE_META_INFO:
                     unicastNode.sendToProxy(metaInformation);
@@ -55,6 +54,11 @@ public class Node {
             }
 
         }
+    }
+
+    private void setUnicastData(InetAddress address, int port) {
+        unicastNode.setAddress(address);
+        unicastNode.setPort(port);
     }
 
 
