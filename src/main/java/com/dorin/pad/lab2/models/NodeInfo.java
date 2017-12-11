@@ -13,6 +13,18 @@ public class NodeInfo {
         this.metaInformation = metaInformation;
     }
 
+    public InetAddress getAddress() {
+        return address;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public MetaInformation getMetaInformation() {
+        return metaInformation;
+    }
+
     @Override
     public String toString() {
         return "NodeInfo{" +
