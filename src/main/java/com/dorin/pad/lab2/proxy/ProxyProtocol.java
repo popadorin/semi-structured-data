@@ -10,6 +10,7 @@ import com.dorin.pad.lab2.proxy.TcpProxyNode;
 import com.dorin.pad.lab2.proxy.TcpProxyNodeImpl;
 import com.dorin.pad.lab2.proxy.UnicastProxy;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ public class ProxyProtocol {
     private final Gson gson = new Gson();
 
     public Employee getEmployee(MulticastProxy multicastProxy, UnicastProxy unicastProxy)
-            throws IOException, ClassNotFoundException {
+            throws IOException, ClassNotFoundException, IllegalStateException, JsonSyntaxException {
 
         byte[] message = ProxyCommand.GIVE_META_INFO.name().getBytes();
         multicastProxy.sendToNodes(message);
@@ -35,7 +36,7 @@ public class ProxyProtocol {
         // make TCP connection with that node
         unicastProxy.sendToNode(ProxyCommand.YOU_ARE_MAVEN, maven.getAddress(), maven.getPort());
 
-        TcpProxyNode proxyNode = new TcpProxyNodeImpl("localhost", Configurations.nodeTcpPort);
+        TcpProxyNode proxyNode = new TcpProxyNodeImpl(maven.getAddress().getHostName(), Configurations.nodeTcpPort);
 
         // say to that node to GIVE_DATA
         proxyNode.sendToNode(ProxyCommand.GIVE_DATA.name().getBytes());

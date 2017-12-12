@@ -2,6 +2,8 @@ package com.dorin.pad.lab2.client;
 
 import com.dorin.pad.lab2.configurations.Configurations;
 import com.dorin.pad.lab2.models.ClientCommand;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -38,9 +40,11 @@ public class Client {
             }
 
         } catch (IOException ioe) {
-            LOGGER.error("IOExceptiono on: " + ioe.getMessage());
+            LOGGER.error("IOException on: " + ioe.getMessage());
         } catch (ClassNotFoundException cnfe) {
             LOGGER.error("ClassNotFoundException on: " + cnfe.getMessage());
+        } catch (JsonSyntaxException ex) {
+            LOGGER.error("Gson exception, ex: " + ex.getMessage());
         }
 
     }
@@ -63,7 +67,5 @@ public class Client {
         String fromProxy = new String(toReceive);
         LOGGER.info("From proxy: " + fromProxy);
     }
-
-
 
 }

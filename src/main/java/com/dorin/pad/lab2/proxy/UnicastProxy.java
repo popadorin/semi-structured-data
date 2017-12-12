@@ -4,6 +4,7 @@ import com.dorin.pad.lab2.models.MetaInformation;
 import com.dorin.pad.lab2.models.NodeInfo;
 import com.dorin.pad.lab2.models.ProxyCommand;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -52,13 +53,13 @@ public class UnicastProxy {
                 nodeInfos.add(new NodeInfo(receivePacket.getAddress(), receivePacket.getPort(), metaInformation));
             } catch (SocketTimeoutException e) {
                 timeoutOccurred = true;
+            }  catch (JsonSyntaxException ex) {
+                LOGGER.error("Gson exception, ex: " + ex.getMessage());
             }
         }
 
         LOGGER.info("EXIT unicast handle, time out");
 
         return nodeInfos;
-
     }
-
 }

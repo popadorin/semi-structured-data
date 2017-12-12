@@ -2,6 +2,7 @@ package com.dorin.pad.lab2.nodes;
 
 import com.dorin.pad.lab2.models.Employee;
 import com.dorin.pad.lab2.models.MetaInformation;
+import com.google.gson.JsonSyntaxException;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -23,6 +24,8 @@ public class Node1 {
             LOGGER.error("IOException occurred on listen");
         } catch (ClassNotFoundException e) {
             LOGGER.error("ClassNotFoundException on: " + e.getMessage());
+        } catch (JsonSyntaxException ex) {
+            LOGGER.error("Gson exception, ex: " + ex.getMessage());
         }
 
     }

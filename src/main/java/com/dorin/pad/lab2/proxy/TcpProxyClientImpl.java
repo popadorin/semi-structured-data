@@ -20,7 +20,6 @@ public class TcpProxyClientImpl implements TcpProxyClient {
         objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
         objectInputStream = new ObjectInputStream(socket.getInputStream());
         LOGGER.info("Proxy TCP started...");
-
     }
 
     @Override

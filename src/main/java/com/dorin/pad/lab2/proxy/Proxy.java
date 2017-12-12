@@ -4,6 +4,7 @@ import com.dorin.pad.lab2.configurations.Configurations;
 import com.dorin.pad.lab2.models.ClientCommand;
 import com.dorin.pad.lab2.models.Employee;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
@@ -17,7 +18,6 @@ public class Proxy {
         try {
             LOGGER.info("Proxy started...");
             // client connection
-
             TcpProxyClient proxyClient = new TcpProxyClientImpl(Configurations.clientProxyPort);
 
             boolean proxyIsStopped = false;
@@ -46,10 +46,13 @@ public class Proxy {
             LOGGER.error("IOException on: " + ioe.getMessage());
         } catch (ClassNotFoundException cnfe) {
             LOGGER.error("ClassNotFoundException on: " + cnfe.getMessage());
+        } catch (JsonSyntaxException ex) {
+            LOGGER.error("Gson exception, ex: " + ex.getMessage());
         }
     }
 
-    private static void treatGetEmployee(TcpProxyClient proxyClient) throws IOException, ClassNotFoundException {
+    private static void treatGetEmployee(TcpProxyClient proxyClient) throws IOException, ClassNotFoundException,
+            IllegalStateException, JsonSyntaxException {
         DatagramSocket udpSocket = new DatagramSocket();
         MulticastProxy multicastProxy = new MulticastProxy(udpSocket,
                 Configurations.multicastAddress, Configurations.multicastPort);
